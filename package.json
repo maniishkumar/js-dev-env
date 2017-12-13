@@ -1,29 +1,29 @@
 {
   "name": "javascript-development-environment",
   "version": "1.0.0",
-  "description": "JavaScript development environment setup",
+  "description": "JavaScript development environment Pluralsight course by Cory House",
   "scripts": {
     "prestart": "babel-node buildScripts/startMessage.js",
-    "start": "npm-run-all --parallel security-check open:src lint:watch test:watch",
+    "start": "npm-run-all --parallel security-check open:src lint:watch test:watch start-mockapi",
     "open:src": "babel-node buildScripts/srcServer.js",
     "lint": "esw webpack.config.* src buildScripts --color",
     "lint:watch": "npm run lint -- --watch",
     "security-check": "nsp check",
-    "localtunnel": "lt --port 2112 --subdomain manish",
+    "localtunnel": "lt --port 3000",
     "share": "npm-run-all --parallel open:src localtunnel",
     "test": "mocha --reporter progress buildScripts/testSetup.js \"src/**/*.test.js\"",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "generate-mock-data": "babel-node buildScripts/generateMockData",
+    "prestart-mockapi": "npm run generate-mock-data",
+    "start-mockapi": "json-server --watch src/api/db.json --port 3001",
+    "clean-dist": "rimraf ./dist && mkdir dist",
+    "prebuild": "npm-run-all clean-dist test lint",
+    "build": "babel-node buildScripts/build.js",
+    "postbuild": "babel-node buildScripts/distServer.js",
+    "deploy": "surge ./dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maniishkumar/js-dev-env.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/maniishkumar/js-dev-env/issues"
-  },
-  "homepage": "https://github.com/maniishkumar/js-dev-env#readme",
+  "author": "Cory House",
+  "license": "MIT",
   "dependencies": {
     "whatwg-fetch": "1.0.0"
   },
@@ -41,7 +41,6 @@
     "css-loader": "0.25.0",
     "eslint": "3.8.1",
     "eslint-plugin-import": "2.0.1",
-    "eslint-plugin-react": "^7.5.1",
     "eslint-watch": "2.1.14",
     "express": "4.14.0",
     "extract-text-webpack-plugin": "1.0.1",
@@ -58,6 +57,7 @@
     "open": "0.0.5",
     "rimraf": "2.5.4",
     "style-loader": "0.13.1",
+    "surge": "0.18.0",
     "webpack": "1.13.2",
     "webpack-dev-middleware": "1.8.4",
     "webpack-hot-middleware": "2.13.0",
